@@ -67,7 +67,7 @@ class CallbackController extends BaseController
         ));
 
         $client = new Client();
-        $response = $client->request('GET', 'https://api.chatwork.com/v2/my/status', [
+        $response = $client->request('GET', 'https://api.chatwork.com/v2/me', [
             'headers' => [
                 'Authorization' => sprintf('Bearer %s', $accessToken)
             ]
@@ -81,7 +81,8 @@ class CallbackController extends BaseController
             'code'                   => $code,
             'error'                  => $error,
             'error_code'             => $errorCode,
-            'error_description'      => $errorDescription
+            'error_description'      => $errorDescription,
+            'response' => (string) $response->getBody(),
         ]);
     }
 }

@@ -33,6 +33,7 @@
             <pre>error: {{ $error }}</pre>
             <pre>error_code: {{ $error_code }}</pre>
             <pre>error_description: {{ $error_description }}</pre>
+            <pre>response: {{ $response }}</pre>
         </div>
     </div>
 </div>

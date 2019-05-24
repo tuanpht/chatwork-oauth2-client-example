@@ -4,6 +4,8 @@
 
 [client registration- ChatWork](https://www.chatwork.com/service/packages/chatwork/subpackages/oauth/client_create.php)
 
+![](./cw-oauth-client.png)
+
 
 ```bash
 $ cp .env.example .env
@@ -16,55 +18,75 @@ $ vi .env
 
 ### 2. Enable SSL & generate a self-signed cert
 
-```bash
-$ cd laradoc
-$ vi caddy/Caddyfile
-```
+Download [mkcert](https://github.com/FiloSottile/mkcert/releases)
 
-```diff
-diff --git a/caddy/Caddyfile b/caddy/Caddyfile
---- a/caddy/Caddyfile
-+++ b/caddy/Caddyfile
-@@ -1,5 +1,5 @@
- # Docs: https://caddyserver.com/docs/caddyfile
--0.0.0.0:80 {
-+https://oauth2-chatwork.local {
-     root /var/www/public
-     fastcgi / php-fpm:9000 php {
-         index index.php
-@@ -17,7 +17,7 @@
-     errors /var/log/caddy/error.log
-     # Uncomment to enable TLS (HTTPS)
-     # Change the first list to listen on port 443 when enabling TLS
--    #tls self_signed
-+    tls self_signed
-
-     # To use Lets encrpt tls with a DNS provider uncomment these
-     # lines and change the provider as required
-```
+Example using Ubuntu 64bit:
 
 ```bash
-$ cd laradoc
-$ docker-compose up caddy
-(press CTRL+C after generating a self-signed cert)
+wget -O mkcert https://github.com/FiloSottile/mkcert/releases/download/v1.3.0/mkcert-v1.3.0-linux-amd64
+chmod +X mkcert
+sudo mv mkcert /usr/local/bin
+```
+
+Generate certificate:
+
+```bash
+sudo apt install libnss3-tools
+mkcert -install
+mkcert secure-local.test
+mkdir ~/.ssl
+mv secure-local.test* ~/.ssl
+realpath ~/.ssl/secure-local.test # to get absolute path /home/ubuntu/.ssl/secure-local.test
 ```
 
 ### 3. Start servers
 
 ```bash
-$ docker run --rm --interactive --tty --volume $PWD:/app composer install
-$ cd laradoc 
-$ docker-compose up -d mysql caddy
+php artisan serve --port=8019
 ```
 
-
-### 4. Access client
+### 4. Update hosts file
 
 ```bash
-$ echo '127.0.0.1       oauth2-chatwork.local' >> /etc/hosts
+$ echo '127.0.0.1 secure-local.test' | sudo tee -a /etc/hosts
 ```
 
-Access https://oauth2-chatwork.local via browser
+### 5. Setup apache2 reverse proxy
+
+`sudo vi /etc/apache2/sites-available/secure-local.test.conf`
+
+```apache
+<VirtualHost *:443>
+    SSLEngine On
+    ProxyPreserveHost On
+    ProxyRequests Off
+    ServerName secure-local.test
+
+    # Set the path to SSL certificate
+    # Usage: SSLCertificateFile /path/to/cert.pem
+    SSLCertificateFile /home/ubuntu/.ssl/secure-local.test.pem
+    SSLCertificateKeyFile /home/ubuntu/.ssl/secure-local.test-key.pem
+
+    # Servers to proxy the connection, or;
+    # List of application servers:
+    # Usage:
+    # ProxyPass / http://[IP Addr.]:[port]/
+    # ProxyPassReverse / http://[IP Addr.]:[port]/
+    # Example:
+    ProxyPass / http://localhost:8019/
+    ProxyPassReverse / http://localhost:8019/
+    RequestHeader set X-Forwarded-Proto "https"
+</VirtualHost>
+```
+
+Enable apache module, site:
+```
+sudo a2enmod proxy_http ssl headers
+sudo a2ensite secure-local.test.conf
+
+```
+
+Access https://secure-local.test via browser
 
 ## Sample code
 

@@ -1,23 +1,23 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e6f2ff47ad16ab0caca0390aeeb833bd",
+    "content-hash": "ee3928b5d13edb501531bd859f3f85b6",
     "packages": [
         {
             "name": "chatwork/oauth2-chatwork",
-            "version": "dev-master",
+            "version": "v0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/chatwork/oauth2-chatwork-php.git",
-                "reference": "21d49a961691c574b4fb72ad967a4a5b7e1c550d"
+                "reference": "59decd77c710f96c67066213029f95419f6056c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/chatwork/oauth2-chatwork-php/zipball/21d49a961691c574b4fb72ad967a4a5b7e1c550d",
-                "reference": "21d49a961691c574b4fb72ad967a4a5b7e1c550d",
+                "url": "https://api.github.com/repos/chatwork/oauth2-chatwork-php/zipball/59decd77c710f96c67066213029f95419f6056c0",
+                "reference": "59decd77c710f96c67066213029f95419f6056c0",
                 "shasum": ""
             },
             "require": {
@@ -52,7 +52,7 @@
                 "oauth",
                 "oauth2"
             ],
-            "time": "2017-11-22T07:14:00+00:00"
+            "time": "2017-11-24T07:14:17+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -4181,9 +4181,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "chatwork/oauth2-chatwork": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
